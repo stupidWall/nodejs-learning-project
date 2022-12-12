@@ -1,0 +1,30 @@
+{
+  "name": "nodejs-global-hometasks",
+  "version": "1.0.0",
+  "description": "for practicing nodejs",
+  "main": "app.js",
+  "scripts": {
+    "task1": "nodemon task1.js",
+    "task2": "nodemon task2.js",
+    "task3": "nodemon --exec node_modules/.bin/babel-node task3/index.js" 
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:stupidWall/nodejs-learning-project.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "bode_he",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.5",
+    "@babel/node": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "csvtojson": "^2.0.10"
+  }
+}
