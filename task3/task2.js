@@ -1,17 +1,25 @@
 
 const csv = require('csvtojson/v2')
 const fs = require('fs')
-const writeStream = fs.createWriteStream('./csv/nodejs-hw1-ex2.txt', 'utf-8')
+
+const csvFilePath = './csv/nodejs-hw1-ex1.csv';
+const jsonFilePath = './csv/nodejs-hw1-ex2.txt';
+
+const readStream = fs.createReadStream(csvFilePath);
+const writeStream = fs.createWriteStream(jsonFilePath, 'utf-8');
 
 const main = () => {
-    try {
-        csv({ignoreEmpty: true})
-            .fromStream(fs.createReadStream("./csv/nodejs-hw1-ex1.csv"))
-            .pipe(writeStream)
-            .on('error', (error) => console.error(error.message))
-    } catch (error) {
-        console.log(error)
-    }
+    const csvToJson = csv()
+        .fromStream(readStream)
+        .pipe(writeStream)
+        .on('done', error => {
+            if (error) {
+                console.error(error);
+            } else {
+                console.log('Conversion completed successfully');
+            }
+        });
+    return csvToJson
 }
 
 export default main
