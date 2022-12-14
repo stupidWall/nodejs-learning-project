@@ -1,26 +1,189 @@
-## Tasks
+# HomeWork 2
+[IN MEMORY CRUD REST SERVICE WITH VALIDATION](https://epam.sharepoint.com/sites/EPAMNode.jsGlobalMentoringProgram/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FEPAMNode%2EjsGlobalMentoringProgram%2FShared%20Documents%2FGeneral%2FHomework%2FModule%202%2FHomework%202%2Epdf&parent=%2Fsites%2FEPAMNode%2EjsGlobalMentoringProgram%2FShared%20Documents%2FGeneral%2FHomework%2FModule%202&p=true&ga=1)
 
-#### TASK 1.1
+# Start
 
-check `task1.js` file.
+```shell
+# 1
+npm install
 
-- [X] The program should be started from npmscript via nodemon
-- [X] The program should be running in a stand-by mode and should not be terminated after the first-string processing.
+# 2
+npm run start
+```
 
-#### TASK 1.2
-check `task2.js` file.
+# Access interface
 
-- [X] Read the content of csvfile from `./csv` directory
-- [X] Use the [csvtojsonpackage](https://github.com/Keyang/node-csvtojson) to convert csvfile to jsonobject.
-- [x] Write the csvfile content to a new txtfile. Use the following format
-- [x] Do not load all the content of the csvfile into RAM via stream (read/write file content line by line).
-- [x] In case of read/write errors, log them in the console.
-- [x] The program should be started via npm scriptusing nodemon
-
+- Use `Postman`
+- It is recommended to use VSCode's extension plug-in `Thunder Client`
 
 
-#### TASK 1.3
-check `task3/` folder.
+# API
 
-- [x] Rewrite the above-mentionedprograms to use babel(https://babeljs.io/)and ES6modules.
+- Based on RESTful API interface specification
+- Interface basic request address: `/api/v1`
 
+## Create User
+
+path: `/user`
+
+method:`post` 
+
+| FieldName   | FieldType | IsRequired |
+| -------- | -------- | -------- |
+| login | string   | Yes       |
+| password    | string   | Yes       |
+| age    | number   | Yes      |
+
+Request demo:
+
+```json
+{
+  "login": "bode",
+  "password": "12345Hn&",
+  "age": 12
+}
+```
+
+Response demo：
+
+```json
+// success
+{
+  "code": 0,
+  "message": "insert ok",
+  "data": {
+    "userid": "b2ebc63f-cf59-452f-9717-a5dbe79d5e8d"
+  }
+}
+```
+
+## Get User
+
+path: `/users/:userid`
+
+method:`get` 
+
+| FieldName   | FieldType | IsRequired |
+| -------- | -------- | -------- |
+| userid | string   | Yes       |
+
+Request demo:
+
+```http
+http://localhost:3000/api/v1/users/1
+```
+
+Response demo：
+
+```json
+// success
+{
+  "code": 0,
+  "message": null,
+  "data": {
+    "id": "1",
+    "login": "jack-1",
+    "password": "123",
+    "age": 12,
+    "isDeleted": false
+  }
+}
+```
+
+## Get Users
+
+path: `/users`
+
+method:`get` 
+
+| FieldName   | FieldType | IsRequired |
+| -------- | -------- | -------- |
+| limit | number   | No       |
+| loginSubstring | string   | No       |
+
+Request demo:
+
+```http
+http://localhost:3000/api/v1/users?limit=2&loginSubstring=-4
+```
+
+Response demo：
+
+```json
+// success
+{
+  "code": 0,
+  "message": null,
+  "data": [
+    {
+      "id": "4",
+      "login": "jack-4",
+      "password": "126",
+      "age": 15,
+      "isDeleted": false
+    }
+  ]
+}
+```
+
+
+## Update User
+
+path: `/user`
+
+method:`put` 
+
+| FieldName   | FieldType | IsRequired |
+| -------- | -------- | -------- |
+| userid | string   | Yes       |
+| login | string   | No       |
+| password    | string   | No       |
+| age    | number   | No      |
+
+Request demo:
+
+```json
+{
+  "id": "1",
+  "login": "bode_he"
+}
+```
+
+Response demo：
+
+```json
+// success
+{
+  "code": 0,
+  "message": "update ok",
+  "data": null
+}
+```
+
+
+## Remove User
+
+path: `/user/:userid`
+
+method:`delete` 
+
+| FieldName   | FieldType | IsRequired |
+| -------- | -------- | -------- |
+| userid | string   | Yes       |
+
+Request demo:
+
+```http
+http://localhost:3000/api/v1/user/1
+```
+
+Response demo：
+
+```json
+// success
+{
+  "code": 0,
+  "message": "remove ok",
+  "data": null
+}
+```

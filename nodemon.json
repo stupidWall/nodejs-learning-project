@@ -1,0 +1,10 @@
+{
+    "ignore": [".git", "node_modules", "lib", "dist"],
+    "watch": ["./src"],
+    "exec": "tsc && babel-node lib/app.js",
+    "ext": "ts",
+    "events": {
+      "restart": "cp -r ./src/db/  lib/db/",
+      "start": "cp -r ./src/db/  lib/db/"
+    }
+}

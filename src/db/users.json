@@ -1,0 +1,73 @@
+
+[
+    {
+        "id": "3",
+        "login": "jack-3",
+        "password": "125",
+        "age": 14,
+        "isDeleted": false
+    },
+    {
+        "id": "4",
+        "login": "jack-4",
+        "password": "126",
+        "age": 15,
+        "isDeleted": false
+    },
+    {
+        "id": "8",
+        "login": "jack-8",
+        "password": "128",
+        "age": 15,
+        "isDeleted": false
+    },
+    {
+        "id": "9",
+        "login": "jack-9",
+        "password": "129",
+        "age": 15,
+        "isDeleted": false
+    },
+    {
+        "id": "10",
+        "login": "jack-10",
+        "password": "130",
+        "age": 15,
+        "isDeleted": false
+    },
+    {
+        "id": "5",
+        "login": "jack-5",
+        "password": "127",
+        "age": 15,
+        "isDeleted": false
+    },
+    {
+        "id": "6",
+        "login": "jack-6",
+        "password": "128",
+        "age": 15,
+        "isDeleted": false
+    },
+    {
+        "id": "7",
+        "login": "jack-7",
+        "password": "127",
+        "age": 15,
+        "isDeleted": false
+    },
+    {
+        "id": "1",
+        "login": "jack-1",
+        "password": "123",
+        "age": 12,
+        "isDeleted": false
+    },
+    {
+        "id": "2",
+        "login": "jack-2",
+        "password": "124",
+        "age": 13,
+        "isDeleted": false
+    }
+]
