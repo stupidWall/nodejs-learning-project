@@ -37,12 +37,6 @@ class UserModel {
         }
     }
 
-    /**
-     * Filters the given array of users by the given login substring
-     * @param users - The array of users to filter
-     * @param loginSubstring - The substring to use for filtering
-     * @returns An array of users that have the given substring in their login
-     */
     private filterByLoginSubstring(users: User[], loginSubstring: string) {
         return users.filter((user) => user.login.includes(loginSubstring));
     }
