@@ -17,16 +17,7 @@ interface InsertResponse extends UserModelResponse {
   userid?: string;
 }
 
-/**
- * A class that provides methods for working with a list of users.
- */
 class UserModel {
-    /**
-     * Returns a list of users that match the provided search criteria.
-     * @param limit  The maximum number of users to return (optional)
-     * @param loginSubstring  A string to match against user login names (optional)
-     * @returns  A promise that resolves to an array of users
-     */
     async getUsers(limit?: number, loginSubstring?: string): Promise<User[]> {
         try {
             const data = await readFile(userJsonFilePath, 'utf-8');
@@ -56,31 +47,16 @@ class UserModel {
         return users.filter((user) => user.login.includes(loginSubstring));
     }
 
-    /**
-     * Limits the given array of users to the specified number
-     * @param users - The array of users to limit
-     * @param limit - The maximum number of users to return
-     * @returns An array of users, with a maximum length of the given limit
-     */
     private applyLimit(users: User[], limit: number) {
         return users.slice(0, Number(limit));
     }
 
-    /**
-     * Asynchronously retrieves a user with the given ID from the list of users
-     * @param userid - The ID of the user to retrieve
-     * @returns A promise that resolves to the user with the given ID, or undefined if no such user exists
-     */
     async findUserById(userid: string) {
         const users = await this.getUsers();
         return users.find((userItem: User) => userItem.id === userid);
     }
 
-    /**
-     * Asynchronously inserts a new user with the given data
-     * @param user - The data for the new user, excluding their ID
-     * @returns A promise that resolves to an object indicating the status of the operation, including the ID of the new user if successful
-     */
+
     async insertUser(user: Omit<User, 'id'>): Promise<InsertResponse> {
         const result: InsertResponse = {
             status: 0
@@ -107,33 +83,18 @@ class UserModel {
         }
     }
 
-    /**
-     * This function checks if a given username is already taken by another user.
-     * @param {User[]} users - An array of users.
-     * @param {string} name - The username to check.
-     * @returns {boolean} - `true` if the username is taken, `false` otherwise.
-     */
+
     private isLoginnameTaken(users: User[], name: string): boolean {
         return users.some(user => user.login === name);
     }
 
-    /**
-     * Generates a response indicating that the provided login name is already taken.
-     * @param result  The user model response to modify
-     * @param name  The login name that is already taken
-     * @returns  The modified user model response with the appropriate error message
-     */
+
     private generateLoginnameTakenResponse(result: UserModelResponse, name: string) {
         result.status = -1;
         result.message = `${name} is already exists`;
         return result;
     }
 
-    /**
-     * Asynchronously updates a user with the given data
-     * @param user - The updated data for the user, including their ID
-     * @returns A promise that resolves to an object indicating the status of the operation
-     */
     async updateUser(
         user: {
       id: User['id'];
@@ -174,11 +135,7 @@ class UserModel {
         }
     }
 
-    /**
-     * Asynchronously removes a user with the given ID from the list of users
-     * @param id - The ID of the user to remove
-     * @returns A promise that resolves to an object indicating the status of the operation
-     */
+
     async removeUser(id: string): Promise<UserModelResponse> {
         const result: UserModelResponse = {
             status: 0
