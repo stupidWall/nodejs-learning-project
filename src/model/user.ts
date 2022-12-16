@@ -6,7 +6,7 @@ import { User } from '../types';
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
-const userJsonFilePath = path.join(__dirname, '../db/users.json');
+const USERS_DB_FILE_PATH = path.join(__dirname, '../db/users.json');
 
 interface UserModelResponse {
   status: 0 | -1;
@@ -17,39 +17,49 @@ interface InsertResponse extends UserModelResponse {
   userid?: string;
 }
 
-class UserModel {
-    async getUsers(limit?: number, loginSubstring?: string): Promise<User[]> {
-        try {
-            const data = await readFile(userJsonFilePath, 'utf-8');
-            const users = JSON.parse(data) as User[];
-            let avaibleUsers = users.filter((user) => !user.isDeleted);
+type SuggestUserParams = {
+    limit?: number;
+    loginSubstring?: string;
+}
 
-            avaibleUsers = loginSubstring
-                ? this.filterByLoginSubstring(avaibleUsers, loginSubstring)
-                : avaibleUsers;
-            avaibleUsers = typeof limit !== 'undefined'
-                ? this.applyLimit(avaibleUsers, limit)
-                : avaibleUsers;
-            return avaibleUsers;
+class UserModel {
+    private getActiveUsers(users: User[]) {
+        return users.filter((user) => !user.isDeleted);
+    }
+
+    private getAutoSuggestUsers(
+        users: User[],
+        condition: SuggestUserParams
+    ): User[] {
+        const { limit, loginSubstring } = condition;
+
+        let results: User[] = loginSubstring
+            ? users.filter((user) => user.login.includes(loginSubstring))
+            : users;
+
+        results =
+      typeof limit !== 'undefined' ? results.slice(0, Number(limit)) : results;
+
+        return results;
+    }
+
+    async getUsers(suggestUserParams: SuggestUserParams = {}): Promise<User[]> {
+        try {
+            const { loginSubstring, limit } = suggestUserParams;
+            const data = await readFile(USERS_DB_FILE_PATH, 'utf-8');
+            const users = JSON.parse(data) as User[];
+            const activeUsers = this.getActiveUsers(users);
+            return this.getAutoSuggestUsers(activeUsers, { loginSubstring, limit });
         } catch (error) {
             console.log(error);
             return [];
         }
     }
 
-    private filterByLoginSubstring(users: User[], loginSubstring: string) {
-        return users.filter((user) => user.login.includes(loginSubstring));
-    }
-
-    private applyLimit(users: User[], limit: number) {
-        return users.slice(0, Number(limit));
-    }
-
     async findUserById(userid: string) {
         const users = await this.getUsers();
         return users.find((userItem: User) => userItem.id === userid);
     }
-
 
     async insertUser(user: Omit<User, 'id'>): Promise<InsertResponse> {
         const result: InsertResponse = {
@@ -66,7 +76,7 @@ class UserModel {
         const newUser = Object.assign({ id: userid }, user);
         const newUsers = [...users, newUser];
         try {
-            await writeFile(userJsonFilePath, JSON.stringify(newUsers));
+            await writeFile(USERS_DB_FILE_PATH, JSON.stringify(newUsers));
             result.status = 0;
             result.message = 'insert ok';
             result.userid = userid;
@@ -77,13 +87,14 @@ class UserModel {
         }
     }
 
-
     private isLoginnameTaken(users: User[], name: string): boolean {
-        return users.some(user => user.login === name);
+        return users.some((user) => user.login === name);
     }
 
-
-    private generateLoginnameTakenResponse(result: UserModelResponse, name: string) {
+    private generateLoginnameTakenResponse(
+        result: UserModelResponse,
+        name: string
+    ) {
         result.status = -1;
         result.message = `${name} is already exists`;
         return result;
@@ -104,7 +115,7 @@ class UserModel {
 
         if (existingIdx === -1) {
             result.status = -1;
-            result.message = `${user.login} is not exists.`;
+            result.message = `id (${user.id}) is not exists.`;
             return result;
         }
 
@@ -114,12 +125,14 @@ class UserModel {
 
         const updatedUser = {
             ...users[existingIdx],
-            ...Object.fromEntries(Object.entries(user).filter(([, value]) => value !== undefined))
+            ...Object.fromEntries(
+                Object.entries(user).filter(([, value]) => value !== undefined)
+            )
         };
 
         users[existingIdx] = updatedUser;
         try {
-            await writeFile(userJsonFilePath, JSON.stringify(users));
+            await writeFile(USERS_DB_FILE_PATH, JSON.stringify(users));
             result.status = 0;
             result.message = 'update ok';
             return result;
@@ -128,7 +141,6 @@ class UserModel {
             return result;
         }
     }
-
 
     async removeUser(id: string): Promise<UserModelResponse> {
         const result: UserModelResponse = {
@@ -146,7 +158,7 @@ class UserModel {
                 return userItem;
             });
 
-            await writeFile(userJsonFilePath, JSON.stringify(newUsers));
+            await writeFile(USERS_DB_FILE_PATH, JSON.stringify(newUsers));
 
             result.status = 0;
             result.message = 'remove ok';

@@ -8,9 +8,9 @@ const { UserController } = Controllers;
 
 // Create two helper functions for generating route paths for the users and user resources
 const usersPrefix = (path?: string) => `/users${path ? `/${path}` : ''}`;
-const userPrefix = (path?: string) => `/user/${path ? `/${path}` : ''}`;
+const userPrefix = (path?: string) => `/user${path ? `/${path}` : ''}`;
 
-router.get(usersPrefix(':userid'), UserController.getUserById);
+router.get(userPrefix(':userid'), UserController.getUserById);
 
 router.get(usersPrefix(), UserController.getUsers);
 

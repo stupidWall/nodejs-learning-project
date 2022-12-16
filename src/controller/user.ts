@@ -16,7 +16,10 @@ const getUsers = async (req: Request<any, any, any, {
     loginSubstring?: string
 }>, res: Response) => {
     const { loginSubstring, limit } = req.query;
-    const users = await UserModel.getUsers(limit, loginSubstring);
+    const users = await UserModel.getUsers({
+        limit,
+        loginSubstring
+    });
     res.status(200).json({
         code: 0,
         message: null,
