@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { findAvailablePort } from './shared/port';
 
 import router from './router';
 
@@ -11,4 +12,6 @@ app.use(express.static('public'));
 app.use(cors());
 app.use('/api/v1', router);
 
-app.listen(PORT, () => console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`));
+findAvailablePort(app, Number(PORT))
+    .then((port) => app.listen(port, () => console.log(`⚡️[server]: Server is running at https://localhost:${port}`)))
+    .catch(err => console.error(err));
