@@ -1,13 +1,15 @@
-import express from 'express';
+import express, { Express } from 'express';
 import { findAvailablePort } from './shared/port';
-
+import cors from 'cors';
 import router from './router';
 
-const PORT = process.env.PORT || 3000;
-const app = express();
+const app: Express = express();
+
+const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(express.static('public'));
+app.use(cors());
 app.use('/api/v1', router);
 
 findAvailablePort(app, Number(PORT))

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import UserModel from '../model/user';
+import UserService from '../../services/userServices';
 
 const getUserById = async (req: Request<{userid: string}>, res: Response) => {
     const userid = req.params.userid;
-    const user = await UserModel.findUserById(userid);
+    const user = await UserService.findUserById(userid);
     res.status(200).json({
         code: user ? 0 : -1,
         message: user ? null : `connot find user by id ${userid}`,
@@ -16,10 +16,7 @@ const getUsers = async (req: Request<any, any, any, {
     loginSubstring?: string
 }>, res: Response) => {
     const { loginSubstring, limit } = req.query;
-    const users = await UserModel.getUsers({
-        limit,
-        loginSubstring
-    });
+    const users = await UserService.getUsers(limit, loginSubstring);
     res.status(200).json({
         code: 0,
         message: null,
@@ -28,7 +25,7 @@ const getUsers = async (req: Request<any, any, any, {
 };
 
 const createUser = async (req: Request, res: Response) => {
-    const result = await UserModel.insertUser(req.body);
+    const result = await UserService.insertUser(req.body);
     res.status(200).json({
         code: result?.status,
         message: result?.message,
@@ -39,7 +36,7 @@ const createUser = async (req: Request, res: Response) => {
 };
 
 const updateUser = async (req: Request, res: Response) => {
-    const result = await UserModel.updateUser(req.body);
+    const result = await UserService.updateUser(req.body);
     res.status(200).json({
         code: result?.status,
         message: result?.message,
@@ -48,7 +45,7 @@ const updateUser = async (req: Request, res: Response) => {
 };
 
 const deleteUser = async (req: Request<{userid: string}>, res: Response) => {
-    const userid = req.params.userid;
+    const userid = req.body.userid;
     if (!userid) {
         res.status(200).json({
             code: 0,
@@ -56,7 +53,7 @@ const deleteUser = async (req: Request<{userid: string}>, res: Response) => {
             data: null
         });
     }
-    const result = await UserModel.removeUser(userid);
+    const result = await UserService.removeUser(userid);
     res.status(200).json({
         code: result?.status,
         message: result?.message,
