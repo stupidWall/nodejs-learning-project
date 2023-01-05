@@ -1,0 +1,8 @@
+{
+    "ignore": [".git", "node_modules", "lib", "dist"],
+    "watch": ["./src"],
+    "exec": "tsc && babel-node lib/app.js",
+    "ext": "ts",
+    "events": {
+    }
+}
